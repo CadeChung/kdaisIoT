@@ -1,23 +1,42 @@
 const registerService = require('../services/registerService');
 const { validationResult } = require('express-validator');
-const auth = require("../validation/authValidation");
 
 let getPageRegister = (req, res) => {
-    res.render("register.ejs")
+    return res.render("register.ejs", {
+        errors: req.flash("errors")
+    });
 };
 
-let createUser = (req, res) => {
-    let errorArr = [];
+let createUser = async (req, res) => {
+
+    //驗證請求的區域
+    let errorsArr = [];
     let validationErrors = validationResult(req);
-    if (!validationErrors.isEmpty()){
+    if (!validationErrors.isEmpty()) {
         let errors = Object.values(validationErrors.mapped());
         errors.forEach((item) => {
-            errorArr.push(item.msg);
+            errorsArr.push(item.msg);
         });
-        req.flash("errors", errorArr);
-        return res.redirect("/register")
+        req.flash("errors", errorsArr);
+        return res.redirect("/register");
     }
-    console.log(req.body)
+
+    // 新增使用者到MySQL
+    try {
+        let newUser = {
+            userName: req.body.userName,
+            email: req.body.email,
+            password: req.body.password
+        };
+
+        await registerService.createUser(newUser);
+        return res.redirect("/login")
+
+    } catch (err) {
+        req.flash("errors", err)
+        return res.redirect("/register");
+    }
+
 };
 
 module.exports = {

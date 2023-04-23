@@ -7,12 +7,12 @@ let createUser = (data) => {
         let isEmailExist = await checkExistEmail(data.email);
 
         if (isEmailExist) {
-            reject(`此Email ${data.email} 已經存在，請重新輸入`);
+            reject(`此Email "${data.email}" 已經存在，請重新輸入`);
         } else {
             // 加密密碼
             let salt = bcrypt.genSaltSync(10);
             let userItem = {
-                username: data.username,
+                username: data.userName,
                 email: data.email,
                 password: bcrypt.hashSync(data.password, salt),
             };

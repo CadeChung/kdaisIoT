@@ -3,12 +3,12 @@ require('dotenv').config();
 // 引用相關套件
 const express = require('express');
 const configViewEngine = require('./configs/viewEngine');
+const initWebRoutes = require("./routers/web")
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const bodyParser = require('body-parser');
 const connectFlash = require('connect-flash');
 const passport = require('passport');
-const initWebRoutes = require("./routers/web")
 
 const app = express();
 
@@ -42,5 +42,6 @@ app.use(passport.session());
 // 初始化所有的網頁路由
 initWebRoutes(app);
 
+// 設定伺服器port
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));

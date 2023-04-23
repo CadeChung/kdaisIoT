@@ -19,15 +19,19 @@ html,body{
     margin-top: auto;
     margin-bottom: auto;
     width: 370px;
+    overflow: auto;
     background-color: lightblue !important;
+    border-radius: 10%;
 }
 
 .card-header h3{
     color: black;
+    text-shadow: 1px 1px 0 #ccc, -1px -1px 0 #ccc, 1px -1px 0 #ccc, -1px 1px 0 #ccc;
 }
 
-.alert {
+.auth-alert {
+    background-color: black;
     color: red;
     text-align: center;
-    align-items: center;
+    font-size: 18px;
 }

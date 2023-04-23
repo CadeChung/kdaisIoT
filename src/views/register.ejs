@@ -24,65 +24,69 @@
                 <div class="card-header text-center">
                     <h3>註冊帳號</h3>
                 </div>
-                <div class="card-body">
-                    <form action="/register" method="POST">
 
-                        <div class="form-floating mb-3">
+                <div>
+                    <% if(errors != "") { %>
+                        <% errors.forEach((item) => { %>
+                            <div class="auth-alert">
+                                <%- item %>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" action="/register">
+                        <div class="form-floating mb-4">
                             <input type="text"
                                    class="form-control"
                                    id="floatingInput"
                                    name="userName"
-                                   placeholder="userName"
-                                   required pattern="[0-9A-z]{4,12}">
+                                   placeholder="userName">
                             <label for="floatingInput">請輸入使用者帳號：</label>
-                            <div id="usernameHelp" class="rounded-3 form-text text-center text-dark">需符合4-12位字母數字</div>
                         </div>
 
-                        <div class="form-floating mb-3">
+                        <div class="form-floating mb-4">
                             <input type="email" 
                                    class="form-control" 
-                                   id="floatingInput" 
+                                   id="email" 
                                    name="email"
-                                   require placeholder="email">
+                                   placeholder="Enter email" required>
                             <label for="floatingInput">請輸入Email</label>
-                            <div id="emailHelp" class="rounded-3 form-text text-center text-dark">請輸入Email格式</div>
                         </div>
         
-                        <div class="form-floating mb-3">
+                        <div class="form-floating mb-4">
                             <input type="password" 
                                    class="form-control"
                                    id="floatingPassword"
                                    name="password"
-                                   placeholder="password"
-                                   require pattern="[0-9A-z]{8,12}">
+                                   placeholder="Password" required>
 
                             <label for="floatingPassword">請輸入密碼：</label>
-                            <div id="passwordHelp" class="rounded-3 form-text text-center text-dark">需符合8-12位字母數字</div>
                         </div>
 
-                        <div class="form-floating mb-3">
+                        <div class="form-floating mb-4">
                             <input type="password"
                                    class="form-control" 
                                    id="floatingPassword" 
-                                   name="second_password"
-                                   placeholder="second_Password"
-                                   required pattern="[0-9A-z]{8,12}">
+                                   name="passwordConfirmation"
+                                   placeholder="Password Confirmation" required>
 
                             <label for="floatingPassword">請輸入第二次密碼：</label>
-                            <div id="passwordHelp" class="rounded-3 form-text text-center text-dark">需符合8-12位字母數字</div>
                         </div>
 
-                        <div class="d-grid mt-3">
+                        <div class="d-grid mb-3">
                             <button type="submit" class="btn btn-primary">註冊帳號</button>
                         </div>
+
                     </form>
                 </div>
-
                 <div class="card-footer">
                     <div class="d-flex justify-content-center links text-dark">
-                        已經有帳號了?<a href="login">返回登入</a>
+                        已經有帳號了?<a href="login"> 返回登入頁面</a>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
