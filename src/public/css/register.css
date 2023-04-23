@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
+
+html,body{
+    background-image: url('../img/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 600;
+}
+
+.container{
+    height: 100%;
+    align-content: center;
+}
+
+.card{
+    height: 570px;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 370px;
+    background-color: lightblue !important;
+}
+
+.card-header h3{
+    color: black;
+}
+   
