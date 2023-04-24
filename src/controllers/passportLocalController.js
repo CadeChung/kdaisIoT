@@ -4,7 +4,7 @@ const loginService = require("../services/loginService");
 
 let LocalStrategy = passportLocal.Strategy;
 
-let initPassportLocal = () =>{
+let initPassportLocal = () => {
     passport.use(new LocalStrategy({
         usernameField: "email",
         passwordField: "password",
@@ -16,10 +16,10 @@ let initPassportLocal = () =>{
                     if (!user) {
                         return done(null, false, req.flash("errors", `這個Email "${email}" 不存在，請重新嘗試`));
                     }
-                    if(user) {
-                        let match = await loginService.comparePasswordUser(password, user);
-                        if (match === true){
-                            return done(null, user, null);
+                    if (user) {
+                        let match = await loginService.comparePassword(password, user);
+                        if (match === true) {
+                            return done(null, user, null)
                         } else {
                             return done(null, false, req.flash("errors", match)
                             )

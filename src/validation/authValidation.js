@@ -1,4 +1,4 @@
-const {check}  = require("express-validator");
+const { check } = require("express-validator");
 
 let validateRegister = [
     check("email", "無效的Email").isEmail().trim(),
@@ -20,7 +20,12 @@ let validateLogin = [
 
 ];
 
+let validateForgotPassword = [
+    check("email", "無效的Email").isEmail().trim(),
+]
+
 module.exports = {
     validateRegister: validateRegister,
-    validateLogin: validateLogin
+    validateLogin: validateLogin,
+    validateForgotPassword: validateForgotPassword,
 }

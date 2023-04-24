@@ -1,5 +1,5 @@
 const DBConnection = require('../configs/DBConnection');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 let createUser = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -19,7 +19,7 @@ let createUser = (data) => {
 
             // 建立新的使用者
             DBConnection.query(
-            ' INSERT INTO users set? ' , userItem,
+            ' INSERT INTO users set ? ' , userItem,
             (err, rows) => {
                 if(err) {
                     reject(false)

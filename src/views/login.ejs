@@ -15,7 +15,7 @@
           href="/css/login.css?<%= new Date().getTime() %>">
     <!-- 讀取本地端jquery檔案 -->
     <script src ="/js/jquery-3.6.4.min.js"></script>
-    <script src = "/js/login.js"></script>
+
     <title>文心蘭物聯網場域</title>
 </head>
 <body>
@@ -29,7 +29,7 @@
 
                 <div class="card-body">
                     
-                    <!-- 帳號驗證告警 -->
+                    <!-- 告警訊息 -->
                     <div>
                         <% if(errors != "") { %>
                             <% errors.forEach((item) => { %>
@@ -40,13 +40,14 @@
                         <% } %>
                     </div>
                     
-                    <form id="login-container" action="/login" method="POST">
+                    <form action="/login" method="POST">
 
                         <div class="form-floating mb-4">
-                            <input type="text"
+                            <input type="email"
                                    class="form-control"
+                                   id="email"
                                    name = "email"
-                                   require placeholder="Enter email">
+                                   placeholder="Enter email" require>
                             <label for="floatingInput">
                                 請輸入Email:
                             </label>
@@ -54,9 +55,10 @@
                         
                         <div class="form-floating mb-4">
                             <input type="password" 
+                                   id="password"
                                    class="form-control"
                                    name ="password" 
-                                   required placeholder="Password">
+                                   placeholder="Password" required>
                             <label for="floatingPassword">請輸入密碼：</label>
                         </div>
 
