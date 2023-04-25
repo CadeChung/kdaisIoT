@@ -3,6 +3,7 @@ const loginController = require("../controllers/loginController");
 const registerController = require("../controllers/registerController");
 const dashboardController = require("../controllers/dashboardController");
 const forgotPasswordController = require("../controllers/forgotPasswordController");
+const resetPasswordController = require("../controllers/resetPasswordController");
 const auth = require("../validation/authValidation");
 const passport = require("passport");
 const initPassportLocal = require("../controllers/passportLocalController");
@@ -29,6 +30,9 @@ let initWebRoutes = (app) => {
 
     router.get("/forgotpassword", forgotPasswordController.getPageForgetPassword);
     router.post("/forgotpassword", auth.validateForgotPassword, forgotPasswordController.handleForgotPassword)
+
+    router.get("/reset", resetPasswordController.getPageResetpassword)
+    router.post("/reset", auth.validateResetPassword)
 
     return app.use("/", router);
 };
