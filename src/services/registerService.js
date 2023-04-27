@@ -20,7 +20,7 @@ let createUser = (data) => {
             // 建立新的使用者
             DBConnection.query(
             ' INSERT INTO users set ? ' , userItem,
-            (err, rows) => {
+            (err, users) => {
                 if(err) {
                     reject(false)
                 }

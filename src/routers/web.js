@@ -32,7 +32,7 @@ let initWebRoutes = (app) => {
     router.post("/forgotpassword", auth.validateForgotPassword, forgotPasswordController.handleForgotPassword)
 
     router.get("/reset", resetPasswordController.getPageResetpassword)
-    router.post("/reset", auth.validateResetPassword)
+    router.post("/reset", auth.validateResetPassword, resetPasswordController.handleResetPassword)
 
     return app.use("/", router);
 };

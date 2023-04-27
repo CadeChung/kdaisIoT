@@ -13,11 +13,11 @@ const passport = require('passport');
 const app = express();
 
 // 解析 cookie
-app.use(cookieParser('secret'));
+app.use(cookieParser(process.env.COOKIE));
 
 // 設定 session
 app.use(session ({
-  secret: 'secret',
+  secret: process.env.SESSION,
   resave: true,
   saveUninitialized: false,
   cookie: {
@@ -41,6 +41,12 @@ app.use(passport.session());
 
 // 初始化所有的網頁路由
 initWebRoutes(app);
+
+// 設定狀態碼為404的網頁
+app.use((req, res, next) => {
+  res.status(404).render("404.ejs");
+});
+
 
 // 設定伺服器port
 const port = process.env.PORT || 5000;

@@ -1,6 +1,7 @@
 const DBConnection = require("../configs/DBConnection");
 const nodemailer = require('nodemailer');
 const emaildata = require('../configs/emailData');
+const bcrypt = require('bcrypt');
 
 let handleForgotPassword = (origin, email, resetToken, createdAt, expiredAt, used) => {
     return new Promise (async (resolve, reject) => {
@@ -17,19 +18,54 @@ let handleForgotPassword = (origin, email, resetToken, createdAt, expiredAt, use
     });
 };
 
+let handleResetPassword = (newPassword, resetToken, email, currentTime) => {
+    return new Promise ( async (resolve, reject) => {
+        try {
+            const user = await findUserByEmail(email);
+            const token = await findValidToken(email, resetToken,  currentTime)
+            
+            if (!user || !token) {
+                reject(`該使用者Email "${email}" 不存在，請重新輸入<br>
+                        該使用者的Token"${resetToken}"錯誤`)
+            } else {
+                let salt = bcrypt.genSaltSync(10);
+                const changePassword = bcrypt.hashSync(newPassword, salt);
+                await updateUserPassword(changePassword, user.id)
+                resolve(true)
+            }
+        } 
+        catch (e) {
+            console.log(e)
+            reject(e)
+        }
+    });
+};
+
+
+let findValidToken = (email, token,currentTime) => {
+    return new Promise((resolve, reject) =>{
+        DBConnection.query(
+            ' SELECT * FROM `ResetPasswordToken` WHERE (`email` =? AND `Token_value` =? AND `expired_at` > ?) ', 
+            [email, token, currentTime], (error, rows) => {
+                if (error) {
+                    return reject(error);
+                } 
+                return resolve(rows[0]);
+        });
+    });
+};
+
 let findUserByEmail = (email) => {
     return new Promise ((resolve, reject) => {
         try {
             DBConnection.query(
-                ' SELECT * FROM `users` WHERE `email` = ? ', email,
-                (err, rows) => {
+                ' SELECT * FROM `Users` WHERE `email` = ? ', 
+                [email], (err, users) => {
                     if (err) {
                         reject(err)
                     }
-                    let user = rows[0]
-                    resolve(user)
-                }
-            )
+                    resolve(users[0])
+            });
         } catch (err) {
             reject(err)
         }
@@ -39,7 +75,8 @@ let findUserByEmail = (email) => {
 let insertResetToken  = (email, tokenValue, createdAt, expiredAt, used) => {
     return new Promise((resolve, rejects) => {
         DBConnection.query(
-            ' INSERT INTO `ResetPasswordToken` (`email`, `Token_value`, `created_at`, `expired_at`, `used`) VALUES (?, ?, ?, ?, ?)', [email, tokenValue, createdAt, expiredAt, used], (error, result)=> {
+            ' INSERT INTO `ResetPasswordToken` (`email`, `Token_value`, `created_at`, `expired_at`, `used`) VALUES (?, ?, ?, ?, ?)', 
+            [email, tokenValue, createdAt, expiredAt, used], (error, result)=> {
                 if (error) {
                     return rejects(error);
                 } 
@@ -51,11 +88,77 @@ let insertResetToken  = (email, tokenValue, createdAt, expiredAt, used) => {
 let expireOldTokens = (email, used) => {
     return new Promise ((resolve, reject) => {
         DBConnection.query(
-            ' UPDATE `ResetPasswordToken` SET used= ? WHERE email = ? ', [used, email], (error) => {
-            if (error) {
-                return reject(error)
-            }
-            return resolve();
+            ' UPDATE `ResetPasswordToken` SET `used`= ? WHERE `email` = ? ', 
+            [used, email], (error) => {
+                if (error) {
+                    return reject(error)
+                }
+                return resolve();
+        });
+    });
+};
+
+let allUser = () => {
+    return new Promise ((resolve, reject) => {
+        DBConnection.query (
+            ' SELECT * FROM `Users` ', (error, users) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(users);
+        });
+    });
+};
+
+let insertUser = (email, userName, password) => {
+    return new Promise ((resolve, reject) => {
+        DBConnection.query (
+            ' INSERT INTO `Users` (`email`, `username`, `password`) VALUES (?, ?, ?) ',
+            [email, userName, password, id], (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(result.insertId);
+        });
+    });
+};
+
+let updateUser = (userName, role, email, password, id) => {
+    return new Promise ((resolve, reject) => {
+        DBConnection.query (
+            ' UPDATE `Users` SET  `email`= ?, `username`= ? , `password`=?, `role`= ?,  WHERE id= ? ',
+            [email, userName, password, role, password], (error) => {
+                if (error) {
+                    return reject (error)
+                } 
+                return resolve('使用者更新成功');
+        });
+    });
+};
+
+let updateUserPassword = ( password, id ) => {
+    return new Promise (( resolve, reject ) => {
+        DBConnection.query(
+            ' UPDATE `Users` SET `password` = ? WHERE `id` = ? ',
+            [password, id], (error) => {
+                if(error) {
+                    console.log(error)
+                    reject(error)
+                }
+                return resolve(true)
+        });
+    });
+};
+
+let DeleteUser = ( id ) => {
+    return new Promise ((resolve, reject) => {
+        DBConnection.query(
+            'DELETE FROM `Users` WHERE `id` =? ',
+            [], (error) => {
+                if (error) {
+                    reject (error)
+                }
+                resolve ()
         });
     });
 };
@@ -82,7 +185,7 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
     let message;
   
     if (origin) {
-      const resetUrl = `${origin}/forgotpassword/resetPassword?token=${resetToken}&email=${email}`;
+      const resetUrl = `${origin}/reset?token=${resetToken}&email=${email}`;
       message = 
       `
         <p style="font-weight: bold; font-size: 18px; text-align: center;">請點擊以下連結並重置密碼，此連結有效期為1小時：</p>
@@ -102,7 +205,7 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
         </div>
       `
     } else {
-      message = `<p>請使用以下token與 <code>/forgotpassword/reset-password</code> api 路由重置你的密碼：</p>
+      message = `<p>請使用以下token與 <code>/reset</code> api 路由重置你的密碼：</p>
       <p><code>${resetToken}</code></p>`;
     }
 
@@ -121,10 +224,6 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
 };
 
 module.exports = {
-    findUserByEmail: findUserByEmail,
     handleForgotPassword: handleForgotPassword,
-    insertResetToken: insertResetToken,
-    expireOldTokens, expireOldTokens,
-    sendEmail: sendEmail,
-    sendPasswordResetEmail, sendPasswordResetEmail,
+    handleResetPassword: handleResetPassword,
 }
