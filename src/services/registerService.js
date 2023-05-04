@@ -27,6 +27,8 @@ let createUser = (data) => {
                     resolve("建立使用者成功!")
                 }
             );
+            DBConnection.end()
+            resolve("關閉資料庫連接")
         };
     })
 }

@@ -15,10 +15,10 @@ html,body{
 }
 
 .card{
-    height: 400px;
+    height: 430px;
     margin-top: auto;
     margin-bottom: auto;
-    width: 370px;
+    width: 380px;
     overflow: auto;
     background-color: lightblue !important;
     border-radius: 10%;
@@ -34,4 +34,8 @@ html,body{
     color: red;
     text-align: center;
     font-size: 18px;
+}
+
+.input-group-append {
+    text-align: right;
 }

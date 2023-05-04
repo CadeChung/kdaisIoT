@@ -19,7 +19,7 @@ let initPassportLocal = () => {
                     if (user) {
                         let match = await loginService.comparePassword(password, user);
                         if (match === true) {
-                            return done(null, user, null)
+                            return done(null, user,  null);
                         } else {
                             return done(null, false, req.flash("errors", match)
                             )

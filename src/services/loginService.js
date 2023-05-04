@@ -28,7 +28,7 @@ let findUserByEmail = (email) => {
                 (err, rows) => {
                     if (err) {
                         reject(err)
-                    } 
+                    }
                     let user = rows[0];
                     resolve(user)
                 }

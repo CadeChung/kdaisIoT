@@ -1,16 +1,20 @@
 // 請求.env的內容
 require('dotenv').config();
 // 引用相關套件
-const express = require('express');
-const configViewEngine = require('./configs/viewEngine');
-const initWebRoutes = require("./routers/web")
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const connectFlash = require('connect-flash');
-const passport = require('passport');
+const express = require('express'),
+      configViewEngine = require('./configs/viewEngine'),
+      initWebRoutes = require("./routers/web"),
+      bodyParser = require('body-parser'),
+      cookieParser = require('cookie-parser'),
+      session = require('express-session'),
+      connectFlash = require('connect-flash'),
+      passport = require('passport');
 
+const mqttController = require('./controllers/mqttController');
+// 引入Socket.IO模組
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 // 解析 cookie
 app.use(cookieParser(process.env.COOKIE));
@@ -42,12 +46,14 @@ app.use(passport.session());
 // 初始化所有的網頁路由
 initWebRoutes(app);
 
-// 設定狀態碼為404的網頁
-app.use((req, res, next) => {
+// 設定狀態碼為404的頁面
+app.use((req, res) => {
   res.status(404).render("404.ejs");
 });
 
-
 // 設定伺服器port
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));
+server.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));
+
+// 讀取mqtt控制器
+mqttController.connectMQTT(io);
