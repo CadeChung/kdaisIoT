@@ -5,7 +5,7 @@ const dashboardController = require("../controllers/dashboardController");
 const forgotPasswordController = require("../controllers/forgotPasswordController");
 const resetPasswordController = require("../controllers/resetPasswordController");
 const adminController = require("../controllers/adminController");
-const mqttController = require("../controllers/mqttController");
+const ECMonitorController = require("../controllers/ECMonitorController");
 const auth = require("../validation/authValidation");
 const passport = require("passport");
 const initPassportLocal = require("../controllers/passportLocalController");
@@ -17,11 +17,16 @@ let router = express.Router();
 
 let initWebRoutes = (app) => {
     router.get("/", loginController.checkLoggedIn, dashboardController.getPageDashboard);
+    // 使用者的router
     router.get("/iot/user/dashboard", loginController.checkLoggedIn, dashboardController.getPageDashboard);
+    // admin的router
     router.get("/iot/admin/dashboard", loginController.checkLoggedIn, 
                                        adminController.checkAdminPermission);
-    router.get("/iot/yufeng/dashboard", loginController.checkLoggedIn, mqttController.getPageMQTT);
-    //router.get("/iot/yufeng/dashboard", mqttController.getPageMQTT);
+    // 玉峰園藝router
+    router.get("/iot/yufeng/dashboard", loginController.checkLoggedIn, ECMonitorController.getPageECMonitor);
+    router.get("/iot/yufeng/dashboard/chart", ECMonitorController.getPageChartEC);
+    router.post("/iot/yufeng/dashboard/chart", ECMonitorController.handleChartSelect);
+
     router.get("/login",loginController.checkLoggedOut, loginController.getPageLogin);
     router.post('/login',passport.authenticate('local', {
         failureRedirect: '/login'}), 

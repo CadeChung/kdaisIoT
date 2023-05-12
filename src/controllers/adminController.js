@@ -6,7 +6,7 @@ let getPageAdmin = async (req, res) => {
     });
 };
 
-let checkAdminPermission = async (req, res, next) => {
+let checkAdminPermission = async (req, res) => {
     const email = req.user.email
     
     const role = await adminService.getUserRole(email)
@@ -14,10 +14,8 @@ let checkAdminPermission = async (req, res, next) => {
     if (role.role !== 'admin'){
         return res.status(501).render("501.ejs");
     } else {
-        getPageAdmin(req, res);
+        return getPageAdmin(req, res);
     }
-
-    next();
 }
 
 module.exports = {

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/js/jquery_3.6.4_min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <form method="POST" action="/iot/yufeng/dashboard/chart">
+    <div class="form-group">
+      <label for="time-range">時間範圍：</label>
+      <select class="form-control" id="time-range" name="time-range">
+        <option value="7">7天內</option>
+        <option value="10">10天內</option>
+        <option value="31">1個月內</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">顯示圖表</button>
+    <button type="submit" class="btn btn-primary">清空圖表</button>
+    <canvas id="myChart"></canvas>
+  </form>
+  <script>
+    $(document).ready(() => {
+      $('form').submit((event) => {
+        event.preventDefault();
+        const timeRange = $('#time-range').val();
+        $.ajax({
+          url: '/iot/yufeng/dashboard/chart',
+          method: 'POST',
+          data: { 'time-range': timeRange },
+          success: (data) => {
+            // 在這裡處理成功的回應
+            console.log(data);
+            // 使用 Chart.js 生成折線圖
+            const ctx = document.getElementById('myChart').getContext('2d');
+
+            // 如果之前已經生成過圖表，則先銷毀之前的圖表
+            if (window.myChart instanceof Chart) {
+              window.myChart.destroy();
+            }
+            // 生成新的圖表
+            const labels = data.dates;
+            window.myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'EC 值',
+                  data: data.ECs,
+                  borderColor: 'green',
+                  fill: false,
+                  tension: 0.1
+                }]
+              },
+              options: {
+                responsive: true,
+              }
+            });
+          },
+          error: (error) => {
+            // 在這裡處理錯誤
+            console.log(error)
+          }
+        });
+      })
+    })
+    
+  </script>
+
+</body>
+
+</html>

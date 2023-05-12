@@ -10,11 +10,11 @@ const express = require('express'),
       connectFlash = require('connect-flash'),
       passport = require('passport');
 
-const mqttController = require('./controllers/mqttController');
+const ECMonitorController = require('./controllers/ECMonitorController');
 // 引入Socket.IO模組
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const sio = require('socket.io')(server);
 
 // 解析 cookie
 app.use(cookieParser(process.env.COOKIE));
@@ -55,5 +55,19 @@ app.use((req, res) => {
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));
 
+// // 定義檢視記憶體使用量的函式
+// function monitorMemoryUsage() {
+//   const used = process.memoryUsage();
+//   for (let key in used) {
+//     console.log(`${key} ${Math.round(used[key] / 1024 / 1024 *100)/100} MB`);
+//   }
+// }
+
+// // 定期監測記憶體使用量的時間間隔（以毫秒為單位）
+// const memoryUsageInterval = 5000; // 5秒
+
+// // 建立定期監測記憶體使用量的計時器
+// const memoryUsageTimer = setInterval(monitorMemoryUsage, memoryUsageInterval);
+
 // 讀取mqtt控制器
-mqttController.connectMQTT(io);
+ECMonitorController.connectMQTT(sio);
