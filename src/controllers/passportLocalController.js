@@ -21,8 +21,7 @@ let initPassportLocal = () => {
                         if (match === true) {
                             return done(null, user,  null);
                         } else {
-                            return done(null, false, req.flash("errors", match)
-                            )
+                            return done(null, false, req.flash("errors", match));
                         }
                     }
                 });   
@@ -40,8 +39,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
     loginService.findUserById(id).then((user) => {
         return done(null, user);
-    }).catch(error => {
-        return done(error, null)
+    }).catch(err => {
+        return done(err, null)
     });
 });
 

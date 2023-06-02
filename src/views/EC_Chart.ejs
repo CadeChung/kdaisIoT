@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>玉峰園藝歷史圖表</title>
   <script src="/js/jquery_3.6.4_min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <title>Document</title>
 </head>
 
 <body>
@@ -15,9 +15,9 @@
     <div class="form-group">
       <label for="time-range">時間範圍：</label>
       <select class="form-control" id="time-range" name="time-range">
-        <option value="7">7天內</option>
-        <option value="10">10天內</option>
-        <option value="31">1個月內</option>
+        <option value="7">7天</option>
+        <option value="10">10天</option>
+        <option value="31">30天</option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary">顯示圖表</button>
@@ -52,7 +52,7 @@
                 datasets: [{
                   label: 'EC 值',
                   data: data.ECs,
-                  borderColor: 'green',
+                  borderColor: 'blue',
                   fill: false,
                   tension: 0.1
                 }]
@@ -62,9 +62,9 @@
               }
             });
           },
-          error: (error) => {
+          error: (err) => {
             // 在這裡處理錯誤
-            console.log(error)
+            console.log(err)
           }
         });
       })

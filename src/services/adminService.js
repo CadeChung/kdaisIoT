@@ -36,8 +36,8 @@ let getUserRole = (email) => {
                     resolve(user)
                 }
             )
-        } catch (error) {
-            reject(error)
+        } catch (err) {
+            reject(err)
         }
     })
 }

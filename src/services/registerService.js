@@ -20,15 +20,13 @@ let createUser = (data) => {
             // 建立新的使用者
             DBConnection.query(
             ' INSERT INTO users set ? ' , userItem,
-            (err, users) => {
+            (err) => {
                 if(err) {
                     reject(false)
                 }
                     resolve("建立使用者成功!")
                 }
             );
-            DBConnection.end()
-            resolve("關閉資料庫連接")
         };
     })
 }

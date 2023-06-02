@@ -1,6 +1,6 @@
 const DBConnection = require("../configs/DBConnection");
 const nodemailer = require('nodemailer');
-const emaildata = require('../configs/emailData');
+const emailData = require('../configs/emailData');
 const bcrypt = require('bcrypt');
 
 let handleForgotPassword = (origin, email, resetToken, createdAt, expiredAt, used) => {
@@ -34,9 +34,9 @@ let handleResetPassword = (newPassword, resetToken, email, currentTime) => {
                 resolve(true)
             }
         } 
-        catch (e) {
-            console.log(e)
-            reject(e)
+        catch (err) {
+            console.log(err)
+            reject(err)
         }
     });
 };
@@ -46,11 +46,12 @@ let findValidToken = (email, token,currentTime) => {
     return new Promise((resolve, reject) =>{
         DBConnection.query(
             ' SELECT * FROM `ResetPasswordToken` WHERE (`email` =? AND `Token_value` =? AND `expired_at` > ?) ', 
-            [email, token, currentTime], (error, rows) => {
-                if (error) {
-                    return reject(error);
+            [email, token, currentTime], (err, rows) => {
+                if (err) {
+                    return reject(err);
                 } 
-                return resolve(rows[0]);
+                let user = rows[0]
+                return resolve(user);
         });
     });
 };
@@ -59,12 +60,13 @@ let findUserByEmail = (email) => {
     return new Promise ((resolve, reject) => {
         try {
             DBConnection.query(
-                ' SELECT * FROM `Users` WHERE `email` = ? ', 
-                [email], (err, users) => {
+                ' SELECT * FROM `Users` WHERE `email` = ? ', [email], 
+                (err, rows) => {
                     if (err) {
                         reject(err)
                     }
-                    resolve(users[0])
+                    let user = rows[0]
+                    resolve(user)
             });
         } catch (err) {
             reject(err)
@@ -73,14 +75,15 @@ let findUserByEmail = (email) => {
 };
 
 let insertResetToken  = (email, tokenValue, createdAt, expiredAt, used) => {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         DBConnection.query(
             ' INSERT INTO `ResetPasswordToken` (`email`, `Token_value`, `created_at`, `expired_at`, `used`) VALUES (?, ?, ?, ?, ?)', 
-            [email, tokenValue, createdAt, expiredAt, used], (error, result)=> {
-                if (error) {
-                    return rejects(error);
+            [email, tokenValue, createdAt, expiredAt, used], (err, rows)=> {
+                if (err) {
+                    return reject(err);
                 } 
-                return resolve(result.insertId)
+                let insertId = rows.insertId
+                return resolve(insertId)
         });
     });
 };
@@ -88,77 +91,77 @@ let insertResetToken  = (email, tokenValue, createdAt, expiredAt, used) => {
 let expireOldTokens = (email, used) => {
     return new Promise ((resolve, reject) => {
         DBConnection.query(
-            ' UPDATE `ResetPasswordToken` SET `used`= ? WHERE `email` = ? ', 
-            [used, email], (error) => {
-                if (error) {
-                    return reject(error)
+            ' UPDATE `ResetPasswordToken` SET `used`= ? WHERE `email` = ? ', [used, email], 
+            (err) => {
+                if (err) {
+                    return reject(err)
                 }
                 return resolve();
         });
     });
 };
 
-let allUser = () => {
-    return new Promise ((resolve, reject) => {
-        DBConnection.query (
-            ' SELECT * FROM `Users` ', (error, users) => {
-                if (error) {
-                    return reject(error);
-                }
-                return resolve(users);
-        });
-    });
-};
+// let allUser = () => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query (
+//             ' SELECT * FROM `Users` ', (err, users) => {
+//                 if (err) {
+//                     return reject(err);
+//                 }
+//                 return resolve(users);
+//         });
+//     });
+// };
 
-let insertUser = (email, userName, password) => {
-    return new Promise ((resolve, reject) => {
-        DBConnection.query (
-            ' INSERT INTO `Users` (`email`, `username`, `password`) VALUES (?, ?, ?) ',
-            [email, userName, password, id], (error, result) => {
-                if (error) {
-                    return reject(error);
-                }
-                return resolve(result.insertId);
-        });
-    });
-};
+// let insertUser = (email, userName, password) => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query (
+//             ' INSERT INTO `Users` (`email`, `username`, `password`) VALUES (?, ?, ?) ',
+//             [email, userName, password, id], (err, result) => {
+//                 if (err) {
+//                     return reject(err);
+//                 }
+//                 return resolve(result.insertId);
+//         });
+//     });
+// };
 
-let updateUser = (userName, role, email, password, id) => {
-    return new Promise ((resolve, reject) => {
-        DBConnection.query (
-            ' UPDATE `Users` SET  `email`= ?, `username`= ? , `password`=?, `role`= ?,  WHERE id= ? ',
-            [email, userName, password, role, password], (error) => {
-                if (error) {
-                    return reject (error)
-                } 
-                return resolve('使用者更新成功');
-        });
-    });
-};
+// let updateUser = (userName, role, email, password, id) => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query (
+//             ' UPDATE `Users` SET  `email`= ?, `username`= ? , `password`=?, `role`= ?,  WHERE id= ? ',
+//             [email, userName, password, role, password], (err) => {
+//                 if (err) {
+//                     return reject (err)
+//                 } 
+//                 return resolve('使用者更新成功');
+//         });
+//     });
+// };
+
+// let DeleteUser = ( id ) => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query(
+//             'DELETE FROM `Users` WHERE `id` =? ',
+//             [], (err) => {
+//                 if (err) {
+//                     reject (err)
+//                 }
+//                 resolve ()
+//         });
+//     });
+// };
 
 let updateUserPassword = ( password, id ) => {
     return new Promise (( resolve, reject ) => {
         DBConnection.query(
             ' UPDATE `Users` SET `password` = ? WHERE `id` = ? ',
-            [password, id], (error) => {
-                if(error) {
-                    console.log(error)
-                    reject(error)
+            [password, id], (err) => {
+                if(err) {
+                    console.log(err)
+                    reject(err)
                 }
                 return resolve(true)
-        });
-    });
-};
-
-let DeleteUser = ( id ) => {
-    return new Promise ((resolve, reject) => {
-        DBConnection.query(
-            'DELETE FROM `Users` WHERE `id` =? ',
-            [], (error) => {
-                if (error) {
-                    reject (error)
-                }
-                resolve ()
         });
     });
 };
@@ -170,8 +173,8 @@ let sendEmail = async (from, to, subject, html) => {
     secure: true,
     port: 465,
     auth: {
-        user: emaildata().user,
-        pass: emaildata().pass,
+        user: emailData().email_user,
+        pass: emailData().email_pass,
     },
     });
     await transporter.sendMail({from, to, subject, html})
@@ -209,7 +212,7 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
       <p><code>${resetToken}</code></p>`;
     }
 
-    await sendEmail (emaildata().email_form, email, `文心蘭物聯網平台密碼重設`, 
+    await sendEmail (emailData().email_form, email, `文心蘭物聯網平台密碼重設`, 
     `
     <div style="max-width: 650px; margin: 0 auto; background-color: #F0F2F5; padding: 20px; border-radius: 10px; font-family: Microsoft JhengHei;">
         <div style="background-color: floralwhite; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px #CFCFCF;">

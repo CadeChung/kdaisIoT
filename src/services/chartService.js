@@ -5,7 +5,11 @@ let getChartData = async (timeRange) => {
   return new Promise(async (resolve, reject) => {
     try {
       DBConnection.query(
-        ' SELECT DATE_FORMAT(date - INTERVAL SECOND(date) SECOND + INTERVAL 5 - MINUTE(date) % 5 MINUTE, "%Y-%m-%d %H:%i:%s") AS time_slot, AVG(EC) AS avg_ec FROM ec_data WHERE date BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY) AND NOW() GROUP BY time_slot; ', timeRange,
+        ' SELECT DATE_FORMAT(date - INTERVAL SECOND(date) SECOND + INTERVAL 5 - MINUTE(date) % 5 MINUTE, "%Y-%m-%d %H:%i:%s") AS time_slot, \
+          AVG(EC) AS avg_ec \
+          FROM ec_data \
+          WHERE date BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY) AND NOW() GROUP BY time_slot; ', timeRange,
+        
         ( err, rows ) => {
           if(err) {
             reject(err)
@@ -19,8 +23,8 @@ let getChartData = async (timeRange) => {
           resolve({dates, ECs})
         }
       );
-    } catch (error) {
-      reject(error)
+    } catch (err) {
+      reject(err)
     }
   })
 }

@@ -4,8 +4,8 @@ const mqttOptions = require('../configs/mqttConnection');
 const getPageMQTT = async (req, res) => {
     try {
         return res.render("EC_Monitor.ejs", { message: "狀態：已連線" });
-    } catch (e) {
-        console.error(error);
+    } catch (err) {
+        console.error(err);
         return res.status(500).send('伺服器錯誤');
     }
 };
@@ -14,7 +14,7 @@ const handleMqttConnect = async( req, res) => {
     try {
         await connectMQTT(io);
         return res.status(200).send('連線成功')
-    } catch (error) {
+    } catch (err) {
         return res.status(500).send('伺服器錯誤');
     }
 }
@@ -45,7 +45,7 @@ const connectMQTT = (io) => {
             console.log('MQTT 連線成功');
         });
         // 連線錯誤
-        client.on('error', (error) =>{
+        client.on('error', (error) => {
             console.error('MQTT 連線錯誤:', error);
         });
 

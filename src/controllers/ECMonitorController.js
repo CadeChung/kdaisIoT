@@ -15,7 +15,7 @@ const getPageChartEC = async (req, res) => {
     try {
         return res.render("EC_Chart.ejs")
     } catch (err) {
-        console.error(e);
+        console.error(err);
         return res.status(500).send('伺服器錯誤');
     }
 }
