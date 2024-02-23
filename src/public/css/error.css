@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
+
+html,body{
+    height: 100%;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 600;
+}
+
+.container {
+    height: 100%;
+    align-content: center;
+}
+
+.card {
+    align-items: center;
+    justify-self: center;
+    max-width: 100%;
+    max-height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    border: 0px;
+}
+
+.card-header h3{
+    color: red;
+}
+
+
+.card-body {
+    text-align: center;
+}
+
+.card-body img {
+    max-width: 50%;
+    height: auto;
+}
+
+.card a {
+    font-size: 30px;
+    color: rgba(236, 120, 25, 0.863);
+}

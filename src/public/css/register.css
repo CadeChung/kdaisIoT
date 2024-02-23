@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
 
 html,body{
-    background-image: url('../img/bg.jpg');
+    background-image: url('../img/bg.png');
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%;
@@ -33,5 +33,12 @@ html,body{
     background-color: black;
     color: red;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
+}
+
+.auth-alert-success {
+    background-color: beige;
+    color: green;
+    text-align: center;
+    font-size: 16px;
 }

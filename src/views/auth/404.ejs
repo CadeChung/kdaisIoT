@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>(404 Error)文心蘭物聯網平台</title>
+    <%- include('../partials/head.ejs') %>  
+    <%- include('../partials/bootstrap.ejs') %>
+    <!-- 讀取本地端css檔案 -->
+    <link rel="stylesheet" href="/css/error.css?<%= new Date().getTime() %>">
+</head>
+<body>
+
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <img src="/img/404.png"/>
+                <h2 class="text-center">找不到該網頁，是否需要其他協助?</h2>
+                <a href="http://localhost:5000/login">返回登入頁面</a>
+            </div>
+        </div> 
+    </div>
+
+</body>
+</html>

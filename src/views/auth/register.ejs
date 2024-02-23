@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>註冊帳號</title>
+    <%- include('../partials/head.ejs') %>
+    <%- include('../partials/bootstrap.ejs') %>
+    <link rel="stylesheet" href="/css/register.css?<%= new Date().getTime() %>">
+</head>
+
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>註冊帳號</h3>
+                </div>
+
+                <!-- 告警訊息 -->
+                <div>
+                    <% if(errors != "") { %>
+                        <% errors.forEach((item) => { %>
+                            <div class="auth-alert">
+                                <%- item %>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+                <!-- 登入成功提示 -->
+                <div>
+                    <% if(locals.isSent) { %>
+                        <div class="auth-alert-success">註冊成功
+                        <br>請返回登入介面進行登入。</div>
+                    <% } %>
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" action="/register">
+                        <div class="form-floating mb-4">
+                            <input type="text"
+                                   class="form-control"
+                                   id="floatingInput"
+                                   name="userName"
+                                   placeholder="userName">
+                            <label for="floatingInput">請輸入使用者帳號：</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email"
+                                   placeholder="Enter email" required>
+                            <label for="floatingInput">請輸入Email</label>
+                        </div>
+        
+                        <div class="form-floating mb-4">
+                            <input type="password" 
+                                   class="form-control"
+                                   id="floatingPassword"
+                                   name="password"
+                                   placeholder="Password" required>
+
+                            <label for="floatingPassword">請輸入密碼：</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password"
+                                   class="form-control" 
+                                   id="floatingPassword" 
+                                   name="passwordConfirmation"
+                                   placeholder="Password Confirmation" required>
+
+                            <label for="floatingPassword">請輸入第二次密碼：</label>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary">註冊帳號</button>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links text-dark">
+                        已經有帳號了?<a href="login"> 返回登入頁面</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

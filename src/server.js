@@ -1,23 +1,27 @@
 // 請求.env的內容
 require('dotenv').config();
 // 引用相關套件
-const express = require('express');
-const configViewEngine = require('./configs/viewEngine');
-const initWebRoutes = require("./routers/web")
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const connectFlash = require('connect-flash');
-const passport = require('passport');
-
+const express = require('express'),
+      configViewEngine = require('./configs/viewEngine'),
+      initWebRoutes = require("./routers/web"),
+      bodyParser = require('body-parser'),
+      cookieParser = require('cookie-parser'),
+      session = require('express-session'),
+      connectFlash = require('connect-flash'),
+      passport = require('passport');
+      jwt = require("jsonwebtoken");
+      mqttOptions = require('./configs/mqttConnection');
+//引用MQTT
 const app = express();
+const server = require('http').Server(app);
+const {connectLigangMQTT, connectMQTT, connectYufengEcMQTT, connectYufengMQTT} = require('./services/mqttService');
 
 // 解析 cookie
-app.use(cookieParser('secret'));
+app.use(cookieParser(process.env.COOKIE));
 
 // 設定 session
 app.use(session ({
-  secret: 'secret',
+  secret: process.env.SESSION,
   resave: true,
   saveUninitialized: false,
   cookie: {
@@ -42,6 +46,33 @@ app.use(passport.session());
 // 初始化所有的網頁路由
 initWebRoutes(app);
 
+// 設定狀態碼為404的頁面
+app.use((req, res) => {
+  res.status(404).render("auth/404.ejs");
+});
+
 // 設定伺服器port
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));
+server.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));
+
+// // 定義檢視記憶體使用量的函式
+// function monitorMemoryUsage() {
+//   const used = process.memoryUsage();
+//   for (let key in used) {
+//     console.log(`${key} ${Math.round(used[key] / 1024 / 1024 *100)/100} MB`);
+//   }
+// }
+
+// // 定期監測記憶體使用量的時間間隔（以毫秒為單位）
+// const memoryUsageInterval = 5000; // 5秒
+
+// // 建立定期監測記憶體使用量的計時器
+// const memoryUsageTimer = setInterval(monitorMemoryUsage, memoryUsageInterval);
+
+// 讀取mqtt控制器
+//connectYufengEcMQTT();
+//connectYufengMQTT();
+// connectMQTT(`cc22_client`, mqttOptions().cc22_temp_topic, mqttOptions().cc22_humd_topic, 'cc22');
+// connectMQTT(`ligangv2_client`, mqttOptions().ligang_v2_temp_topic, mqttOptions().ligang_v2_humd_topic, 'ligangv2');
+// connectMQTT(`ligangv3_client`, mqttOptions().ligang_v3_temp_topic, mqttOptions().ligang_v3_humd_topic, 'ligangv3');
+// connectLigangMQTT(`ligangv5_client`, mqttOptions().ligang_v5_temp_topic, mqttOptions().ligang_v5_humd_topic, mqttOptions().ligang_v5_lux_topic, 'ligangv5');

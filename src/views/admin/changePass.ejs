@@ -1,0 +1,89 @@
+<section
+    id="setting_content"
+    class="content-section"
+    style="display: none;"
+>
+    <div id="app">
+        <div class="title">
+            <h2>個人資料</h2>
+        </div>
+
+        <div class="title">
+            <h2>修改密碼</h2>
+        </div>
+        <!-- <div class="insights">
+            <div class="sub_box">
+                <form @submit.prevent="changePassword">
+                    <div v-if="message">
+                        <p :style="{color: messageColor }">{{message}}</p>
+                    </div>
+                    <label>舊密碼：</label>
+                    <input
+                        type="password"
+                        v-model = "currentPassword"
+                        placeholder="請輸入舊密碼"
+                        required
+                    ><br>
+        
+                    <label>新密碼：</label>
+                    <input
+                        type="password"
+                        v-model = "newPassword"
+                        placeholder="請輸入新密碼"
+                        required
+                    ><br>
+        
+                    <label>確認密碼：</label>
+                    <input
+                        type="password"
+                        v-model = "confirmPassword"
+                        placeholder="請輸入確認密碼"
+                        required
+                    ><br>
+                    <button @click="changePassword">更改</input>
+                </form>
+            </div>
+        </div> -->
+        <div class="insights">
+            <div>
+                <div v-if="message">
+                    <p :style="{color: messageColor }">{{message}}</p>
+                </div>
+                <div class="">
+                    <label>舊密碼：</label>
+                    <input
+                        type="password"
+                        v-model="currentPassword"
+                        placeholder="請輸入舊密碼"
+                        required
+                    ><br>
+                </div>
+
+                <div>
+                    <label>新密碼：</label>
+                    <input
+                        type="password"
+                        v-model="newPassword"
+                        placeholder="請輸入新密碼"
+                        required
+                    ><br>
+                </div>
+
+                <div>
+
+                    <label>確認密碼：</label>
+                    <input
+                        type="password"
+                        v-model="confirmPassword"
+                        placeholder="請輸入確認密碼"
+                        required
+                    ><br>
+                </div>
+
+
+                <button @click="changePassword">更改密碼</button>
+            </div>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,109 @@
+<section id="yufeng_content" class="content-section">
+    <div class="title">
+        <h2>玉峰園藝</h2>
+    </div>
+    <div class="insights">
+        <div class="temp">
+            <span class="material-symbols-sharp">device_thermostat</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>溫度</h3>
+                    <h2 id="current-TEMP"></h2>
+                </div>
+                <div id="jg2" class="progress"></div>
+            </div>
+            <small id="lastUploadedTime1" class="text-muted">上傳時間:未上傳</small>
+        </div>
+        <!------------- END OF TEMP ---------------->
+        <div class="humd">
+            <span class="material-symbols-sharp">humidity_percentage</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>濕度</h3>
+                    <h2 id="current-HUMD"></h2>
+                </div>
+                <div id="jg3" class="progress"></div>
+            </div>
+            <small id="lastUploadedTime2" class="text-muted">上傳時間:未上傳</small>
+        </div>
+        <!------------- END OF HUMD ---------------->
+        <div class="ec">
+            <span class="material-symbols-sharp">water_ec</span>
+            <div class="middle">
+                <div class="left">
+                    <h3>EC值</h3>
+                    <h2 id="current-EC"></h2>
+                </div>
+                <div id="jg1" class="progress"></div>
+            </div>
+            <small id="lastUploadedTime3" class="text-muted">上傳時間:未上傳</small>
+        </div>
+        <!------------- END OF EC ---------------->
+    </div>
+
+    <div class="user-orders">
+        <table>
+            <!------------------------ 第一組標體跟內容 ------------------->
+            <thead>
+                <tr>
+                    <th>溫度</th>
+                    <th>濕度</th>
+                    <th>EC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="current-TEMP2"></td>
+                    <td id="current-HUMD2"></td>
+                    <td id="current-EC2"></td>
+                </tr>
+            </tbody>
+            <!----------------------- 第二組標體跟內容 --------------------->
+            <thead>
+                <tr>
+                    <th>露點溫度</th>
+                    <th>土壤濕度</th>
+                    <th>葉片濕度</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="current-DewPoint"></td>
+                    <td id="current-SoilMoisture"></td>
+                    <td id="current-LeafWet"></td>
+                </tr>
+            </tbody>
+            <!----------------------- 第三組標體跟內容 --------------------->
+            <thead>
+                <tr>
+                    <th>光量子</th>
+                    <th>太陽輻射</th>
+                    <th>降雨量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="current-PAR"></td>
+                    <td id="current-SolarRad"></td>
+                    <td id="current-RAIN"></td>
+                </tr>
+            </tbody>
+            <!----------------------- 第四組標體跟內容 --------------------->
+            <thead>
+                <tr>
+                    <th>風向</th>
+                    <th>風速</th>
+                    <th>最大風速</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="current-WDIR"></td>
+                    <td id="current-WDSD"></td>
+                    <td id="current-H_FX"></td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</section>

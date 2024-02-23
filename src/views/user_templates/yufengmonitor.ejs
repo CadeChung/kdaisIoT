@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>玉峰園藝監測平台</title>
+    <%- include('../partials/head.ejs') %>
+    <%- include('../partials/bootstrap.ejs') %>
+    <link rel="stylesheet" href="/css/yufengmonitor.css?<%= new Date().getTime() %>">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent text-center d-flex align-items-center vh-10">
+            <div class="nav-brand d-flex align-items-center">
+                <a href="http://127.0.0.1:5000/iot/yufeng/dashboard" class="title" type="submit">
+                    玉峰園藝EC觀測平台
+                </a>
+            </div>
+
+            <button class="toggler navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+                <form class="form-inline my-0 my-lg-0 mx-2" method="POST" action="/chart">
+                    <button id="chart-button" type="submit" class="btn my-2 my-sm-0">歷史圖表</button>
+                </form>
+
+                <form class="form-inline my-0 my-lg-0" method="POST" action="/logout">
+                    <button type="submit" class="btn my-2 my-sm-0">登出</button>
+                </form>
+            </div>
+
+        </nav>
+
+        <div class="warning-message" id="temperatureWarning"></div>
+
+        <div class="row mt-3" style="justify-content: flex-end;">
+            <div class="col-md-6 uploadtime">
+                <div class="text-center">現在時間</div>
+                <div id="current-time"></div>
+            </div>
+
+            <div class="col-md-6 uploadtime">
+                <div class="text-center">天氣資料上傳時間：</div>
+                <div id="uploadtime"></div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="text-center fs-3 w-100">
+                數據監測
+            </div>
+
+            <table>
+                <thead>
+                    <tr class="text-center border border-dark">
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/2624/2624031.png" />EC值
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/5826/5826412.png" />溫度
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/3262/3262966.png" />濕度
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center border border-dark ">
+                        <td class="border border-dark" id="current-EC1"></td>
+                        <td class="border border-dark" id="current-TEMP1"></td>
+                        <td class="border border-dark" id="current-HUMD1"></td>
+                    </tr>
+                </tbody>
+
+
+                <thead>
+                    <tr class="text-center border border-dark">
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/7334/7334552.png" />露點溫度
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img
+                                 src="https://cdn-icons-png.flaticon.com/32/11331/11331784.png" />土壤濕度
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/1345/1345376.png" />葉片濕度
+                        </td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="text-center border border-dark ">
+                        <td class="border border-dark" id="current-DewPoint"></td>
+                        <td class="border border-dark" id="current-SoilMoisture">土壤濕度</td>
+                        <td class="border border-dark" id="current-LeafWet">葉片濕度</td>
+                    </tr>
+                </tbody>
+
+                <thead>
+                    <tr class="text-center border border-dark">
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/2196/2196340.png" />光量子
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/979/979585.png" />太陽輻射
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/2469/2469994.png" />降雨量
+                        </td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="text-center border border-dark">
+                        <td class="border border-dark" id="current-PAR">光量子輻射</td>
+                        <td class="border border-dark" id="current-SolarRad">太陽輻射</td>
+                        <td class="border border-dark" id="current-RAIN">降雨量</td>
+                    </tr>
+                </tbody>
+
+                <thead>
+                    <tr class="text-center border border-dark">
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/3437/3437125.png" />風向
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/5532/5532989.png" />風速
+                        </td>
+                        <td class="border border-dark tdtitle">
+                            <img src="https://cdn-icons-png.flaticon.com/32/9367/9367346.png" />最大風速
+                        </td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="text-center border border-dark">
+                        <td class="border border-dark" id="current-WDIR">風向</td>
+                        <td class="border border-dark" id="current-WDSD">風速</td>
+                        <td class="border border-dark" id="current-H_FX">最大風速</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row mt-3" style="justify-content: center;">
+            <div class="text-center fs-3 w-100">
+                儀錶板監測
+            </div>
+
+            <div class="row text-center d-flex w-100">
+                <div class="col-md-4 fs-3 fw-bold"
+                     style="background-color: lightgoldenrodyellow; border-radius: 10px;">
+                    EC值<div id="jg1"></div>
+                </div>
+                <div class="col-md-4 fs-3 fw-bold"
+                     style="background-color: rgb(243, 174, 174); border-radius: 10px;">
+                    溫度<div id="jg2"></div>
+                </div>
+                <div class="col-md-4 fs-3 fw-bold"
+                     style="background-color: rgb(168, 247, 247); border-radius: 10px;">
+                    濕度<div id="jg3"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mt-3" style="justify-content: center;">
+            <div class="text-center fs-3 w-100">
+                氣象預報
+            </div>
+
+            <div class="echarts">
+                <div class="cwbchart" id="cwb-chart"></div>
+                <div class="cwbfooter" id="cwb-footer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/yufengMonitor.js"></script>
+    <script src="/js/getCwbChart.js"></script>
+
+</body>
+
+</html>

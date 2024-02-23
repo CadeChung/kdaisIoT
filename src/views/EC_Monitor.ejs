@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玉峰園藝監測平台</title>
+
+    <!-- 讀取本地端javaScript檔案 -->
+    <script src ="/js/jquery_3.6.4_min.js"></script>
+    <script src="/js/socket_io_min.js"></script>
+    <script src="/js/gauge_min.js"></script>
+    <!-- 引用boostrap v5.1.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
+            crossorigin="anonymous">
+    </script>
+
+</head>
+<body>
+    <body class="bg-secondary">
+        <div class="container">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-transparent text-center d-flex align-items-center vh-10">
+                <div class="nav-brand alert-success d-flex align-items-center">
+                    <%= message %>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+                    <form class= "form-inline my-2 my-lg-0 mx-2" method="POST" action="chart">
+                        <button id ="chart-button" type="submit" class="btn btn-primary my-2 my-sm-0">歷史圖表</button>
+                    </form>
+                    
+                    <form class= "form-inline my-2 my-lg-0" method="POST" action="/logout">
+                        <button type="submit" class="btn btn-primary my-2 my-sm-0">登出</button>
+                    </form>
+                    
+                </div>
+            </nav>   
+
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <h2 class="rounded-pill display-4 bg-warning bg-gradient">玉峰園藝EC觀測平台</h2>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card rounded-pill border border-dark bg-info">
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <h2 id="current-time">現在時間:</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card rounded-pill border border-dark bg-gradient">
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <h3 id="EC-Value"></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+    
+            <div class="row mt-3">
+                <div class="col-lg-12">
+                    <div class="card bg-transparent border border-warning">
+                        <div class="card-body text-center">
+                            <h3 class="card-title text-center text-warning">EC值儀錶板01</h3>
+                            <canvas id="Radial-Gauge"></canvas>
+                            <h3 class="card-title text-center text-warning">EC值儀錶板02</h3>
+                            <canvas id="Linear-gauge"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/ec_monitor.js"></script>
+
+</body>
+</html>

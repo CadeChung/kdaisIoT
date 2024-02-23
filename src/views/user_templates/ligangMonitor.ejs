@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>里港監測平台</title>
+  <%- include('../partials/head.ejs') %>
+  <%- include('../partials/bootstrap.ejs') %>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg bg-transparent text-center d-flex align-items-center vh-10">
+      <div class="nav-brand d-flex align-items-center">
+        <a href="http://127.0.0.1:5000/iot/ligang/dashboard" class="title" type="submit">
+          里港環境監測平台
+        </a>
+
+        <button class="toggler navbar-toggler" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+          <form class="form-inline my-0 my-lg-0 mx-2" method="POST" action="/chart">
+            <button id="chart-button" type="submit" class="btn my-2 my-sm-0">歷史圖表</button>
+          </form>
+
+          <form class="form-inline my-0 my-lg-0" method="POST" action="/logout">
+            <button type="submit" class="btn my-2 my-sm-0">登出</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="warning-message"></div>
+
+  </div>
+</body>
+</html>

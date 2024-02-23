@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>文心蘭物聯網場域</title>
+    <%- include('../partials/head.ejs') %>
+    <%- include('../partials/bootstrap.ejs') %>
+    <link rel="stylesheet" href="/css/login.css?<%= new Date().getTime() %>">
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card">
+
+                <div class="card-header text-center">
+                    <h3>文心蘭應用場域</h3>
+                </div>
+
+                <div class="card-body">
+                    
+                    <!-- 告警訊息 -->
+                    <div>
+                        <% if(errors != "") { %>
+                            <% errors.forEach((item) => { %>
+                                <div class="auth-alert">
+                                    <%- item %>
+                                </div>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                    
+                    <form action="/login" method="POST">
+
+                        <div class="form-floating mb-4">
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   name = "email"
+                                   placeholder="Enter email" require>
+                            <label for="floatingInput">
+                                請輸入Email:
+                            </label>
+                        </div>
+                        
+                        <div class="form-floating mb-4">
+                            <input type="password" 
+                                   id="password"
+                                   class="form-control"
+                                   name ="password" 
+                                   placeholder="Password" required>
+                            <label for="floatingPassword">請輸入密碼：</label>
+                            <div class="input-group-append">
+                                <button class="btn" type="button" id="show-password-btn">
+                                    <i id="eyes" class="fa fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                登入
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center links text-dark mb-3">
+                        還沒有帳號?<a href="register">註冊帳號</a>
+                    </div>
+                    <div class="d-flex justify-content-center text-dark mb-3">
+                        <a href="forgotpassword">忘記密碼?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(()=>{
+            $('#show-password-btn').click(()=>{
+                let passwordInput = $('#password')
+                let passwordFieldType = passwordInput.attr('type');
+                let eyesIcon = $('#eyes')
+
+                if (passwordFieldType !== 'password') {
+                    passwordInput.attr('type', 'password');
+                    eyesIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'text');
+                    eyesIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

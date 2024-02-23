@@ -3,12 +3,12 @@ const forgotpasswordService = require("../services/forgotpasswordService");
 const crypto = require("crypto");
 
 let getPageForgetPassword = async(req, res) => {
-    return res.render("forgotpassword.ejs", {
+    return res.render("auth/forgotpassword.ejs", {
         errors: req.flash("errors")
     });
 };
 
-let handleForgotPassword = async(req, res, next) => {
+let handleForgotPassword = async(req, res) => {
     //驗證請求的區域
     let errorsArr = [];
     let validationErrors = validationResult(req);
@@ -25,7 +25,7 @@ let handleForgotPassword = async(req, res, next) => {
     try {
         const email = req.body.email;
         const origin = req.header('Origin');
-        const resetToken = crypto.randomBytes(40).toString('hex')
+        const resetToken = crypto.randomBytes(40).toString('hex');
         const resetTokenExpires = new Date(Date.now() + 60*60*1000);
         const createdAt = new Date(Date.now());
         const expiredAt = resetTokenExpires;
@@ -33,12 +33,12 @@ let handleForgotPassword = async(req, res, next) => {
         await forgotpasswordService.handleForgotPassword(
             origin,
             email, 
-            resetToken, 
+            resetToken,
             createdAt, 
             expiredAt, 0);
         
         res.locals.isSent = true;
-        return res.render("forgotpassword.ejs", {errors: req.flash("errors")});
+        return res.render("auth/forgotpassword.ejs", {errors: req.flash("errors")});
 
     } catch (err) {
         console.log(err)

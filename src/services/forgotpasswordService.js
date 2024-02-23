@@ -1,6 +1,7 @@
 const DBConnection = require("../configs/DBConnection");
 const nodemailer = require('nodemailer');
-const emaildata = require('../configs/emailData');
+const emailData = require('../configs/emailData');
+const bcrypt = require('bcrypt');
 
 let handleForgotPassword = (origin, email, resetToken, createdAt, expiredAt, used) => {
     return new Promise (async (resolve, reject) => {
@@ -17,19 +18,56 @@ let handleForgotPassword = (origin, email, resetToken, createdAt, expiredAt, use
     });
 };
 
+let handleResetPassword = (newPassword, resetToken, email, currentTime) => {
+    return new Promise ( async (resolve, reject) => {
+        try {
+            const user = await findUserByEmail(email);
+            const token = await findValidToken(email, resetToken, currentTime)
+            
+            if (!user || !token) {
+                reject(`該使用者Email "${email}" 不存在，請重新輸入<br>
+                        該使用者的Token"${resetToken}"錯誤`)
+            } else {
+                let salt = bcrypt.genSaltSync(10);
+                const changePassword = bcrypt.hashSync(newPassword, salt);
+                await updateUserPassword(changePassword, user.id)
+                resolve(true)
+            }
+        } 
+        catch (err) {
+            console.log(err)
+            reject(err)
+        }
+    });
+};
+
+
+let findValidToken = (email, token,currentTime) => {
+    return new Promise((resolve, reject) =>{
+        DBConnection.query(
+            ' SELECT * FROM `ResetPasswordToken` WHERE (`email` =? AND `Token_value` =? AND `expired_at` > ?) ', 
+            [email, token, currentTime], (err, rows) => {
+                if (err) {
+                    return reject(err);
+                } 
+                let user = rows[0]
+                return resolve(user);
+        });
+    });
+};
+
 let findUserByEmail = (email) => {
     return new Promise ((resolve, reject) => {
         try {
             DBConnection.query(
-                ' SELECT * FROM `users` WHERE `email` = ? ', email,
+                ' SELECT * FROM `Users` WHERE `email` = ? ', [email], 
                 (err, rows) => {
                     if (err) {
                         reject(err)
                     }
                     let user = rows[0]
                     resolve(user)
-                }
-            )
+            });
         } catch (err) {
             reject(err)
         }
@@ -37,13 +75,15 @@ let findUserByEmail = (email) => {
 };
 
 let insertResetToken  = (email, tokenValue, createdAt, expiredAt, used) => {
-    return new Promise((resolve, rejects) => {
+    return new Promise((resolve, reject) => {
         DBConnection.query(
-            ' INSERT INTO `ResetPasswordToken` (`email`, `Token_value`, `created_at`, `expired_at`, `used`) VALUES (?, ?, ?, ?, ?)', [email, tokenValue, createdAt, expiredAt, used], (error, result)=> {
-                if (error) {
-                    return rejects(error);
+            ' INSERT INTO `ResetPasswordToken` (`email`, `Token_value`, `created_at`, `expired_at`, `used`) VALUES (?, ?, ?, ?, ?)', 
+            [email, tokenValue, createdAt, expiredAt, used], (err, rows)=> {
+                if (err) {
+                    return reject(err);
                 } 
-                return resolve(result.insertId)
+                let insertId = rows.insertId
+                return resolve(insertId)
         });
     });
 };
@@ -51,11 +91,64 @@ let insertResetToken  = (email, tokenValue, createdAt, expiredAt, used) => {
 let expireOldTokens = (email, used) => {
     return new Promise ((resolve, reject) => {
         DBConnection.query(
-            ' UPDATE `ResetPasswordToken` SET used= ? WHERE email = ? ', [used, email], (error) => {
-            if (error) {
-                return reject(error)
-            }
-            return resolve();
+            ' UPDATE `ResetPasswordToken` SET `used`= ? WHERE `email` = ? ', [used, email], 
+            (err) => {
+                if (err) {
+                    return reject(err)
+                }
+                return resolve();
+        });
+    });
+};
+
+// let allUser = () => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query (
+//             ' SELECT * FROM `Users` ', (err, users) => {
+//                 if (err) {
+//                     return reject(err);
+//                 }
+//                 return resolve(users);
+//         });
+//     });
+// };
+
+// let updateUser = (userName, role, email, password, id) => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query (
+//             ' UPDATE `Users` SET  `email`= ?, `username`= ? , `password`=?, `role`= ?,  WHERE id= ? ',
+//             [email, userName, password, role, password], (err) => {
+//                 if (err) {
+//                     return reject (err)
+//                 } 
+//                 return resolve('使用者更新成功');
+//         });
+//     });
+// };
+
+// let DeleteUser = ( id ) => {
+//     return new Promise ((resolve, reject) => {
+//         DBConnection.query(
+//             'DELETE FROM `Users` WHERE `id` =? ',
+//             [], (err) => {
+//                 if (err) {
+//                     reject (err)
+//                 }
+//                 resolve ()
+//         });
+//     });
+// };
+
+let updateUserPassword = ( password, id ) => {
+    return new Promise (( resolve, reject ) => {
+        DBConnection.query(
+            'UPDATE `users` SET `password` = ? WHERE `id` = ?',
+            [password, id],
+            (err) => {
+                if(err) {
+                    reject(err);
+                }
+                return resolve(true);
         });
     });
 };
@@ -67,8 +160,8 @@ let sendEmail = async (from, to, subject, html) => {
     secure: true,
     port: 465,
     auth: {
-        user: emaildata().user,
-        pass: emaildata().pass,
+        user: emailData().email_user,
+        pass: emailData().email_pass,
     },
     });
     await transporter.sendMail({from, to, subject, html})
@@ -82,7 +175,7 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
     let message;
   
     if (origin) {
-      const resetUrl = `${origin}/forgotpassword/resetPassword?token=${resetToken}&email=${email}`;
+      const resetUrl = `${origin}/reset?token=${resetToken}&email=${email}`;
       message = 
       `
         <p style="font-weight: bold; font-size: 18px; text-align: center;">請點擊以下連結並重置密碼，此連結有效期為1小時：</p>
@@ -97,16 +190,16 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
             <a href="https://kdais.ptmetas.com">文心蘭物聯網平台</a> |
         </div>
         <div style="font-size: 12px; color: #666; text-align: center; margin-top: 20px;">
-            © 2023 版權所有 kdais All Rights Reserved - 行政院農業委員會高雄區農業改良場<br>
+            © 2023 版權所有 kdais All Rights Reserved - 高雄區農業改良場<br>
             908126屏東縣長治鄉德和村德和路2-6號
         </div>
       `
     } else {
-      message = `<p>請使用以下token與 <code>/forgotpassword/reset-password</code> api 路由重置你的密碼：</p>
+      message = `<p>請使用以下token與 <code>/reset</code> api 路由重置你的密碼：</p>
       <p><code>${resetToken}</code></p>`;
     }
 
-    await sendEmail (emaildata().email_form, email, `文心蘭物聯網平台密碼重設`, 
+    await sendEmail (emailData().email_form, email, `文心蘭物聯網平台密碼重設`, 
     `
     <div style="max-width: 650px; margin: 0 auto; background-color: #F0F2F5; padding: 20px; border-radius: 10px; font-family: Microsoft JhengHei;">
         <div style="background-color: floralwhite; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px #CFCFCF;">
@@ -121,10 +214,6 @@ const sendPasswordResetEmail = async (email, resetToken, origin) => {
 };
 
 module.exports = {
-    findUserByEmail: findUserByEmail,
     handleForgotPassword: handleForgotPassword,
-    insertResetToken: insertResetToken,
-    expireOldTokens, expireOldTokens,
-    sendEmail: sendEmail,
-    sendPasswordResetEmail, sendPasswordResetEmail,
+    handleResetPassword: handleResetPassword,
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>管理員頁面</title>
+    <link rel="stylesheet" href="/css/admin.css?<%= new Date().getTime() %>">
+    <%- include('../partials/head.ejs')%>
+</head>
+
+<body>
+    <div class="container">
+
+        <%- include('sidebar.ejs')%>
+
+            <!----------------------- END OF ASIDE -------------------->
+            <main>
+                <h1>導覽</h1>
+
+                <div class="date">
+                    <time id="updateTime">日期：</time>
+                </div>
+
+                <%- include('yufeng.ejs') %>
+                <%- include('cht.ejs') %>
+                <%- include('hitiki.ejs') %>
+                <%- include('kingkit.ejs') %>
+                <%- include('other.ejs') %>
+                <%- include('list.ejs') %>
+                <%- include('changePass.ejs') %>
+            </main>
+
+            <!----------------------- END OF MAIN --------------------->
+
+            <div class="right">
+                <div class="top">
+                    <button id="menu-btn">
+                        <span class="material-symbols-sharp">menu</span>
+                    </button>
+                    <div class="theme-toggler">
+                        <span class="material-symbols-sharp active">light_mode</span>
+                        <span class="material-symbols-sharp">dark_mode</span>
+                    </div>
+                    <div class="profile">
+                        <div class="info">
+                            <p>歡迎，<b>管理員</b></p>
+                            <small class="text-muted">admin</small>
+                        </div>
+                        <div class="profile-photo">
+                            <img src="/img/501.png">
+                        </div>
+                    </div>
+                </div>
+
+                <!----------------------- END OF TOP ------------------------>
+                <div class="recent-updates">
+                    <h2>最近更新</h2>
+                    <div class="updates">
+                        <div class="update">
+                            <div class="profile-photo">
+                                <img
+                                    src="/img/501.png"
+                                    alt=""
+                                >
+                            </div>
+                            <div class="message">
+                                <p>Admin<b></b>管理員測試</p>
+                                <small class="text-muted">10分鐘前上傳</small>
+                            </div>
+                        </div>
+                        <div class="update">
+                            <div class="profile-photo">
+                                <img
+                                    src="/img/501.png"
+                                    alt=""
+                                >
+                            </div>
+                            <div class="message">
+                                <p>Admin<b></b>管理員測試</p>
+                                <small class="text-muted">10分鐘前上傳</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!---------------------- END OF RECENT UPDATES ------------------->
+                <div class="reminders">
+                    <div class="header">
+                        <h2>提醒事項</h2>
+                        <div class="icon">
+                            <span class="material-symbols-sharp">notifications_none</span>
+                        </div>
+                    </div>
+
+                    <div class="notification">
+                        <div class="icon">
+                            <span class="material-symbols-sharp">volume_up</span>
+                        </div>
+                        <div class="content">
+                            <div class="info">
+                                <h3>上班提醒</h3>
+                                <small class="text-muted">早上08:00-晚上10:00</small>
+                            </div>
+                            <span class="material-symbols-sharp">more_vert</span>
+                        </div>
+                    </div>
+
+                    <div class="notification add-remider">
+                        <div>
+                            <span class="material-symbols-sharp">add</span>
+                        </div>
+                        <h3>新增提醒事項</h3>
+                    </div>
+                </div>
+
+            </div>
+
+    </div>
+
+    <script src="/js/admin.js"></script>
+    <script src="/js/yufengMonitor.js"></script>
+
+</body>
+
+</html>

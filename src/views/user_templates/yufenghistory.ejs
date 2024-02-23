@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>玉峰園藝歷史圖表</title>
+  <%- include('../partials/head.ejs') %>
+  <%- include('../partials/bootstrap.ejs') %>
+  <link rel="stylesheet" href="/css/yufenghistory.css?<%= new Date().getTime() %>">
+</head>
+
+<body onload="GetWeatherData()">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 d-flex align-content-center justify-content-center">
+        <h3 class="title">歷史數據</h3>
+      </div>
+    </div>
+
+    <div class="row mb-3 text-center d-flex align-items-center">
+      <div class="text-start col-6">
+        <button class="home" onclick="goHome()"><i class="fa fa-home"></i>首頁</button>
+      </div>
+      
+      <div class="col-6 ">
+        <h5 class="select-text">選擇天數：
+          <select id="days" onchange="GetWeatherData()" class="select-box">
+            <option value="1" selected="true">前1天</option>
+            <option value="3">前3天</option>
+            <option value="7">前7天</option>
+            <option value="15">前15天</option>
+            <option value="30">前30天</option>
+            <option value="90">前90天</option>
+            <option value="180">前半年</option>
+            <option value="365">前一年</option>
+          </select>
+        </h5>
+      </div>
+
+    </div>
+
+    <div class="echarts">
+      <div id="main" class="main"></div>
+      <div id="main2" class="main"></div>
+      <div id="main3" class="main"></div>
+      <div id="main4" class="main"></div>
+      <div id="main5" class="main"></div>
+      <div id="main6" class="main"></div>
+    </div>
+  </div>
+
+  <script src="/js/getYufengHistoryData.js"></script>
+</body>
+
+</html>

@@ -15,12 +15,13 @@ let createUser = (data) => {
                 username: data.userName,
                 email: data.email,
                 password: bcrypt.hashSync(data.password, salt),
+                role: 'user',
             };
 
             // 建立新的使用者
             DBConnection.query(
             ' INSERT INTO users set ? ' , userItem,
-            (err, rows) => {
+            (err) => {
                 if(err) {
                     reject(false)
                 }

@@ -2,13 +2,12 @@ const registerService = require('../services/registerService');
 const { validationResult } = require('express-validator');
 
 let getPageRegister = (req, res) => {
-    return res.render("register.ejs", {
+    return res.render("auth/register.ejs", {
         errors: req.flash("errors")
     });
 };
 
 let createUser = async (req, res) => {
-
     //驗證請求的區域
     let errorsArr = [];
     let validationErrors = validationResult(req);
@@ -30,8 +29,10 @@ let createUser = async (req, res) => {
         };
 
         await registerService.createUser(newUser);
-        return res.redirect("/login")
-
+        res.locals.isSent = true;
+        return res.render("auth/register",{
+            errors: req.flash("errors")
+        });
     } catch (err) {
         req.flash("errors", err)
         return res.redirect("/register");

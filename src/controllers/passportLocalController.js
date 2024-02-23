@@ -12,20 +12,20 @@ let initPassportLocal = () => {
         },
         async (req, email, password, done) => {
             try {
-                await loginService.findUserByEmail(email).then(async (user) => {
-                    if (!user) {
-                        return done(null, false, req.flash("errors", `這個Email "${email}" 不存在，請重新嘗試`));
+                const user = await loginService.findUserByEmail(email);
+                if (!user) {
+                    return done(null, false, req.flash("errors", `這個Email "${email}" 不存在，請重新嘗試`));
+                }
+
+                if (user) {
+                    let match = await loginService.comparePassword(password, user.password);
+                    if (match === true) {                    
+                        return done(null, user,  null);
+                    } else {
+                        return done(null, false, req.flash("errors", match));
                     }
-                    if (user) {
-                        let match = await loginService.comparePassword(password, user);
-                        if (match === true) {
-                            return done(null, user, null)
-                        } else {
-                            return done(null, false, req.flash("errors", match)
-                            )
-                        }
-                    }
-                });   
+                }
+
             } catch (err) {
                 console.log(err);
                 return done(null, false, { message: err});
@@ -40,8 +40,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
     loginService.findUserById(id).then((user) => {
         return done(null, user);
-    }).catch(error => {
-        return done(error, null)
+    }).catch(err => {
+        return done(err, null)
     });
 });
 
