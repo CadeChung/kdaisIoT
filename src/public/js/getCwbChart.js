@@ -1,29 +1,37 @@
 $(document).ready(() => {
-    createCwbChartContent('屏東縣', '內埔鄉', 'cwb-chart', 'cwbImageContent1', '');
+    createCwbChartContent('屏東縣', '內埔鄉', 'yufengChart','cwb-chart', 'cwb-footer', '', 'yufengTempWarning');
+    createCwbChartContent('屏東縣', '里港鄉', 'ligangChart','ligang-chart', 'ligang-footer', '', 'ligangTempWarning');
 });
 
-const createCwbChartContent = (_city, _town, _contentID, _cwbInfoContentID, _dataLen) => {
+const createCwbChartContent = (_city, _town, _cwbChart, _contentID, _foodterID, _dataLen, _tempWarning) => {
     let url = "http://127.0.0.1:5000/api/weatherforecast";
     $.when(
         $.getJSON(url),
     ).done((res0) => {
-        let cwbChart = echarts.init(document.getElementById(_contentID));
-        let area = res0.records.locations[0].location.find((item) => {
-            return item.locationName === _town;
-        });
+        if (!res0) {
+            console.error("Error: Invalid response data.");
+            return;
+        }
+
+        _cwbChart = echarts.init(document.getElementById(_contentID));
+        let area = res0.records.locations[0].location.find((item) => item.locationName === _town);
+        if (!area) {
+            console.error(`Error: Town '${_town}' not found.`)
+        }
 
         window.onresize = () => {
-            cwbChart.resize();
+            if(_cwbChart) {
+                _cwbChart.resize();
+            }
         };
-        const cwbFooter = document.getElementById('cwb-footer');
+        const cwbFooter = document.getElementById(_foodterID);
         cwbFooter.innerHTML = `<span>來源：${_city}${_town}</span>`;
         wxList = area.weatherElement[1].time;
-        console.log(wxList)
-        drawCwbChart(area, cwbChart, _dataLen);
+        drawCwbChart(area, _cwbChart, _dataLen, _tempWarning);
     })
-}
+};
 
-const drawCwbChart = (area, cwbChart, _dataLen) => {
+const drawCwbChart = (area, cwbChart, _dataLen, _tempWarning) => {
     if (_dataLen === '') {
         _dataLen = 20;
     }
@@ -35,14 +43,15 @@ const drawCwbChart = (area, cwbChart, _dataLen) => {
     let yAxisData = [];
     let minTemp = 100;
     let maxTemp = 0;
+    let minRain = 100;
+    let maxRain = 0;
     let temperatureThreshold = 15;
     let seriesRainData = [];
     let index = 0;
     const now = new Date();
 
     const findTemp = timeList.filter(item => item.elementValue[0].value < temperatureThreshold);
-    const temperatureWarning = document.getElementById('temperatureWarning');
-    //const warningGif = document.getElementById('warningGif');
+    const temperatureWarning = document.getElementById(_tempWarning);
 
     if (findTemp.length > 0) {
         const item = findTemp[1];
@@ -77,7 +86,6 @@ const drawCwbChart = (area, cwbChart, _dataLen) => {
 
             const timestring = time.dataTime.substring(0, 16).replace(/-/g, '/');
             const temperature = parseInt(time.elementValue[0].value);
-
             if (minTemp > temperature) {
                 minTemp = temperature;
             }
@@ -118,11 +126,11 @@ const drawCwbChart = (area, cwbChart, _dataLen) => {
     });
 
     if (cwbChart != null) {
-        drawECharts(cwbChart, xAxisData, yAxisData, seriesRainData, minTemp, maxTemp);
+        drawTempCharts(cwbChart, xAxisData, yAxisData, seriesRainData, minTemp, maxTemp);
     }
 };
 
-const drawECharts = (cwbChart, xAxisData, yAxisData, seriesRainData, minTemp, maxTemp) => {
+const drawTempCharts = (cwbChart, xAxisData, yAxisData, seriesRainData, minTemp, maxTemp) => {
     let option = {
         tooltip: {
         },
@@ -177,4 +185,4 @@ const drawECharts = (cwbChart, xAxisData, yAxisData, seriesRainData, minTemp, ma
             },]
     };
     cwbChart.setOption(option);
-}
+};

@@ -40,7 +40,9 @@ let initWebRoutes = (app) => {
 
     // ligang
     router.get("/api/ligang/latest", ligangController.getLastData);
-
+    router.get("/api/ligang/history", ligangController.getLigangHistoryData);
+    router.get("/iot/ligang/dashboard", ligangController.getPageLigangMonitor);
+    router.get("/iot/ligang/history", ligangController.getPageLigangHistory);
     // 玉峰園藝router
     //router.get("/iot/yufeng/dashboard", loginController.checkLoggedIn, yufengController.getPageECMonitor);
     router.get("/iot/yufeng/dashboard", yufengController.getPageYufengMonitor);

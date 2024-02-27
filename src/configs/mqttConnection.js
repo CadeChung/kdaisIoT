@@ -7,7 +7,7 @@ const mqttOptions = () => ({
     yufeng_EC_topic: process.env.YUFENG_EC_TOPIC,
     port: process.env.MQTT_PORT,
     hivemqserver: process.env.HIVEMQ_SERVER,
-    twiot_weather_topic: process.env.TWIOT_WEATHER_TOPIC,
+    twiot_weather_topic: process.env.YUFENG_WEATHER_TOPIC,
     cc22_temp_topic: process.env.CC22_TEMP_TOPIC,
     cc22_humd_topic: process.env.CC22_HUMD_TOPIC,
     ligang_v1_temp_topic: process.env.LIGANG_V1_TEMP_TOPIC,

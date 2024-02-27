@@ -94,20 +94,17 @@ const connectYufengMQTT = () => {
     }
 };
 
-const connectMQTT = (client_name, temp_topic, humd_topic, file_name) => {
+const connectMQTT = (client_name, topics, file_name) => {
     client_name = mqtt.connect(`mqtt://${mqttOptions().hivemqserver}:${mqttOptions().port}`);
     try {
         const sensorData = {
             time: null,
-            ligang_temp: null,
-            ligang_humd: null,
+            temp: null,
+            humd: null,
+            lux: null,
         };
 
         client_name.on('connect', ()=> {
-            const topics = [
-                temp_topic,
-                humd_topic,
-            ];
             client_name.subscribe(topics);
             console.log(`${file_name} MQTT topic connected successfully`);
         });
@@ -118,63 +115,26 @@ const connectMQTT = (client_name, temp_topic, humd_topic, file_name) => {
 
         client_name.on('message', (topic, message) => {
             const mqttMessage = message.toString();
-            const ligangData = JSON.parse(mqttMessage);
-            if (topic === temp_topic) {
-                sensorData.time = ligangData.time;
-                sensorData.ligang_temp = ligangData.value;
-            } else if (topic === humd_topic) {
-                sensorData.ligang_humd = ligangData.value;
+            const parseData = JSON.parse(mqttMessage);
+            if(topics.length === 2) {
+                if (topic === topics[0]) {
+                    sensorData.time = parseData.time;
+                    sensorData.temp = parseData.value;
+                } else if (topic === topics[1]) {
+                    sensorData.humd = parseData.value;
+                }
+            } else if (topics.length === 3) {
+                if (topic === topics[0]) {
+                    sensorData.time = parseData.time;
+                    sensorData.temp = parseData.value;
+                } else if (topic === topics[1]) {
+                    sensorData.humd = parseData.value;
+                } else if (topic === topics[2]) {
+                    sensorData.lux = parseData.value;
+                }
             }
-
-            if (Object.values(sensorData).every((value) => value !== null)) {
-                fs.writeFile(`C:/xampp/htdocs/kdais/json/${file_name}.json`, JSON.stringify(sensorData), (err) => {
-                    if (err) throw err;
-                    console.log(`Save lastest Ligang ${file_name} Data`);
-                });
-            }
-        });
-    } catch(err) {
-        console.error(err);
-    }
-};
-
-const connectLigangMQTT = (client_name, temp_topic, humd_topic, lux_topic, file_name) => {
-    client_name = mqtt.connect(`mqtt://${mqttOptions().hivemqserver}:${mqttOptions().port}`);
-    try {
-        const sensorData = {
-            time: null,
-            ligang_temp: null,
-            ligang_humd: null,
-            ligang_lux: null,
-        };
-
-        client_name.on('connect', ()=> {
-            const topics = [
-                temp_topic,
-                humd_topic,
-                lux_topic
-            ];
-            client_name.subscribe(topics);
-            console.log(`${file_name} MQTT topic connected successfully`);
-        });
-
-        client_name.on('error', (err) => {
-            console.log('MQTT connection error:', err);
-        });
-
-        client_name.on('message', (topic, message) => {
-            const mqttMessage = message.toString();
-            const ligangData = JSON.parse(mqttMessage);
-            if (topic === temp_topic) {
-                sensorData.time = ligangData.time;
-                sensorData.ligang_temp = ligangData.value;
-            } else if (topic === humd_topic) {
-                sensorData.ligang_humd = ligangData.value;
-            } else if (topic === lux_topic) {
-                sensorData.ligang_lux = ligangData.value;
-            }
-
-            if (Object.values(sensorData).every((value) => value !== null)) {
+            const atLeastOneDataReceived = sensorData.time !== null && (sensorData.ligang_temp !== null || sensorData.ligang_humd !== null || sensorData.ligang_lux !== null);
+            if (atLeastOneDataReceived) {
                 fs.writeFile(`C:/xampp/htdocs/kdais/json/${file_name}.json`, JSON.stringify(sensorData), (err) => {
                     if (err) throw err;
                     console.log(`Save lastest Ligang ${file_name} Data`);
@@ -188,7 +148,6 @@ const connectLigangMQTT = (client_name, temp_topic, humd_topic, lux_topic, file_
 
 module.exports = {
     connectMQTT,
-    connectLigangMQTT,
     connectYufengEcMQTT,
     connectYufengMQTT,
 };

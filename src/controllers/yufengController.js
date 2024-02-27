@@ -21,8 +21,8 @@ const getPageYufengChart = async (req, res) => {
 
 const getHistoryData = async (req, res) => {
     try {
-        const deviceID = req.query.device
-        const days = req.query.days
+        const deviceID = req.query.device;
+        const days = req.query.days;
         const loadData =  await yufengService.getHistoryDataForYufeng(deviceID, days);
         res.json(loadData);
     } catch (err) {

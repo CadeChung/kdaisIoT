@@ -172,7 +172,7 @@ const getHistoryDataForYufeng = async (deviceID, days) => {
 };
 
 const getWeatherForecast = async () => {
-    const response = await fetch('https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-033?Authorization=CWB-5205EB6A-8913-45D0-BCC2-E54EB14AC8A0&locationName=%E5%85%A7%E5%9F%94%E9%84%89', {
+    const response = await fetch('https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-033?Authorization=CWB-5205EB6A-8913-45D0-BCC2-E54EB14AC8A0', {
         method: 'GET',
     });
 

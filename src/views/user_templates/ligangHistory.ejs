@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-  <title>玉峰園藝歷史圖表</title>
+  <title>里港場域歷史圖表</title>
   <%- include('../partials/head.ejs') %>
-  <%- include('../partials/bootstrap.ejs') %>
-  <link rel="stylesheet" href="/css/yufenghistory.css?<%= new Date().getTime() %>">
+    <%- include('../partials/bootstrap.ejs') %>
+      <link rel="stylesheet" href="/css/yufenghistory.css?<%= new Date().getTime() %>">
 </head>
 
-<body onload="getWeatherData()">
+<body>
   <div class="container">
     <div class="row">
       <div class="col-md-12 d-flex align-content-center justify-content-center">
@@ -16,14 +16,14 @@
       </div>
     </div>
 
-    <div class="row mb-3 text-center d-flex align-items-center">
+    <div class="row mb-3 text-center d-flex align-content-center">
       <div class="text-start col-6">
         <button class="home" onclick="goHome()"><i class="fa fa-home"></i>首頁</button>
       </div>
-      
-      <div class="col-6 ">
+
+      <div class="col-6">
         <h5 class="select-text">選擇天數：
-          <select id="days" onchange="getWeatherData()" class="select-box">
+          <select id="days" onchange="getHistoryData()" class="select-box">
             <option value="1" selected="true">前1天</option>
             <option value="3">前3天</option>
             <option value="7">前7天</option>
@@ -38,16 +38,14 @@
     </div>
 
     <div class="echarts">
-      <div id="main" class="main"></div>
-      <div id="main2" class="main"></div>
-      <div id="main3" class="main"></div>
-      <div id="main4" class="main"></div>
-      <div id="main5" class="main"></div>
-      <div id="main6" class="main"></div>
+      <div id="ligangChartV1" class="main"></div>
+      <div id="ligangChartV2" class="main"></div>
+      <div id="ligangChartV3" class="main"></div>
+      <div id="ligangChartV5" class="main"></div>
     </div>
-  </div>
 
-  <script src="/js/getYufengHistoryData.js"></script>
+  </div>
+  <script src="/js/ligangHistoryChart.js"></script>
 </body>
 
 </html>

@@ -36,9 +36,9 @@ const convertWindDirections = (directions) => {
     return convertedDirection;
 };
 
-const GetWeatherData = () => {
+const getWeatherData = () => {
     $("#container").empty();
-    let days = Number(document.getElementById('days').value);
+    let days = Number($('#days').val());
 
     $.getJSON(`http://127.0.0.1:5000/api/history_data?device=EC0001&days=${days}`, (data) => {
         let arr_TIME = new Array();

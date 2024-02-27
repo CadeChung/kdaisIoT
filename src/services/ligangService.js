@@ -21,6 +21,25 @@ const getLigangLastData = async() => {
   }
 };
 
+const readHistoryData = async(days) => {
+  try {
+    const historyData = await fs.readFile("C:/xampp/htdocs/kdais/json/liganghistory.json");
+    const historyDataParsed = JSON.parse(historyData);
+
+    const filterDataByDays = historyDataParsed.filter((item) => {
+      const dataTime = new Date(item.time);
+      const currentTime = new Date();
+      const diffTime = Math.abs(currentTime.getTime() - dataTime.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= days;
+    });
+    return filterDataByDays;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 module.exports = {
-  getLigangLastData: getLigangLastData,
+  getLigangLastData,
+  readHistoryData
 };

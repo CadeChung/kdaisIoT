@@ -4,8 +4,8 @@
 <head>
     <title>玉峰園藝監測平台</title>
     <%- include('../partials/head.ejs') %>
-    <%- include('../partials/bootstrap.ejs') %>
-    <link rel="stylesheet" href="/css/yufengmonitor.css?<%= new Date().getTime() %>">
+        <%- include('../partials/bootstrap.ejs') %>
+            <link rel="stylesheet" href="/css/userTemplate.css?<%= new Date().getTime() %>">
 </head>
 
 <body>
@@ -33,15 +33,14 @@
                     <button type="submit" class="btn my-2 my-sm-0">登出</button>
                 </form>
             </div>
-
         </nav>
 
-        <div class="warning-message" id="temperatureWarning"></div>
+        <div class="warning-message" id="yufengTempWarning"></div>
 
         <div class="row mt-3" style="justify-content: flex-end;">
             <div class="col-md-6 uploadtime">
                 <div class="text-center">現在時間</div>
-                <div id="current-time"></div>
+                <div id="yufeng-currentTime"></div>
             </div>
 
             <div class="col-md-6 uploadtime">
@@ -147,6 +146,7 @@
                 </tbody>
             </table>
         </div>
+        
         <div class="row mt-3" style="justify-content: center;">
             <div class="text-center fs-3 w-100">
                 儀錶板監測
@@ -155,21 +155,21 @@
             <div class="row text-center d-flex w-100">
                 <div class="col-md-4 fs-3 fw-bold"
                      style="background-color: lightgoldenrodyellow; border-radius: 10px;">
-                    EC值<div id="jg1"></div>
+                    EC值<div id="yufengECGauge"></div>
                 </div>
                 <div class="col-md-4 fs-3 fw-bold"
                      style="background-color: rgb(243, 174, 174); border-radius: 10px;">
-                    溫度<div id="jg2"></div>
+                    溫度<div id="yufengTempGauge"></div>
                 </div>
                 <div class="col-md-4 fs-3 fw-bold"
                      style="background-color: rgb(168, 247, 247); border-radius: 10px;">
-                    濕度<div id="jg3"></div>
+                    濕度<div id="yufengHumdGauge"></div>
                 </div>
             </div>
 
         </div>
 
-        <div class="row mt-3" style="justify-content: center;">
+        <div class="row mt-3 justify-content-center">
             <div class="text-center fs-3 w-100">
                 氣象預報
             </div>
@@ -181,7 +181,7 @@
         </div>
     </div>
 
-    <script src="/js/yufengMonitor.js"></script>
+    <script src="/js/yufengTemplates.js"></script>
     <script src="/js/getCwbChart.js"></script>
 
 </body>

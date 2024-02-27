@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>里港監測平台</title>
   <%- include('../partials/head.ejs') %>
-  <%- include('../partials/bootstrap.ejs') %>
+    <%- include('../partials/bootstrap.ejs') %>
+      <link rel="stylesheet" href="/css/userTemplate.css?<%= new Date().getTime() %>">
 </head>
+
 <body>
   <div class="container">
     <nav class="navbar navbar-expand-lg bg-transparent text-center d-flex align-items-center vh-10">
@@ -12,28 +15,146 @@
         <a href="http://127.0.0.1:5000/iot/ligang/dashboard" class="title" type="submit">
           里港環境監測平台
         </a>
+      </div>
 
-        <button class="toggler navbar-toggler" type="button" data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-          aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+      <button class="toggler navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 
-          <form class="form-inline my-0 my-lg-0 mx-2" method="POST" action="/chart">
-            <button id="chart-button" type="submit" class="btn my-2 my-sm-0">歷史圖表</button>
-          </form>
+        <form class="form-inline my-0 my-lg-0 mx-2" method="POST" action="/chart">
+          <button id="chart-button" type="submit" class="btn my-2 my-sm-0">歷史圖表</button>
+        </form>
 
-          <form class="form-inline my-0 my-lg-0" method="POST" action="/logout">
-            <button type="submit" class="btn my-2 my-sm-0">登出</button>
-          </form>
-        </div>
+        <form class="form-inline my-0 my-lg-0" method="POST" action="/logout">
+          <button type="submit" class="btn my-2 my-sm-0">登出</button>
+        </form>
       </div>
     </nav>
 
-    <div class="warning-message"></div>
+    <div class="warning-message" id="ligangTempWarning"></div>
+
+    <div class="row mt-3" style="justify-content: flex-end;">
+      <div class="col-md-6 uploadtime">
+        <div class="text-center">現在時間</div>
+        <div id="ligang-currentTime"></div>
+      </div>
+
+      <div class="col-md-6 uploadtime">
+        <div class="text-center">天氣資料上傳時間：</div>
+        <div id="ligang-uploadTime"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="text-center fs-3 w-100">
+        冷凍庫第一區
+      </div>
+
+      <div class="col border border-dark border-dark tdtitle text-center">
+        <img src="https://cdn-icons-png.flaticon.com/32/5826/5826412.png" />溫度
+      </div>
+
+      <div class="col border border-dark border-dark tdtitle text-center">
+        <img src="https://cdn-icons-png.flaticon.com/32/3262/3262966.png" />濕度
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col border border-dark text-center" id="ligang-v1-temp">20 °C</div>
+      <div class="col border border-dark text-center" id="ligang-v1-humd">80 %</div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="text-center fs-3 w-100">
+        冷凍庫第二區
+      </div>
+
+      <table>
+        <thead>
+          <tr class="text-center border border-dark">
+            <td class="border border-dark tdtitle">
+              <img src="https://cdn-icons-png.flaticon.com/32/5826/5826412.png" />溫度
+            </td>
+            <td class="border border-dark tdtitle">
+              <img src="https://cdn-icons-png.flaticon.com/32/3262/3262966.png" />濕度
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center border border-dark">
+            <td class="border border-dark" id="ligang-v2-temp"></td>
+            <td class="border border-dark" id="ligang-v2-humd"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center fs-3 w-100">
+        包裝室
+      </div>
+
+      <table>
+        <thead>
+          <tr class="text-center border border-dark">
+            <td class="border border-dark tdtitle">
+              <img src="https://cdn-icons-png.flaticon.com/32/5826/5826412.png" />溫度
+            </td>
+            <td class="border border-dark tdtitle">
+              <img src="https://cdn-icons-png.flaticon.com/32/3262/3262966.png" />濕度
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center border border-dark">
+            <td class="border border-dark" id="ligang-v3-temp"></td>
+            <td class="border border-dark" id="ligang-v3-humd"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="text-center fs-3 w-100">
+        網室
+      </div>
+
+      <div class="col border border-dark text-center tdtitle">
+        <img src="https://cdn-icons-png.flaticon.com/32/5826/5826412.png" />溫度
+      </div>
+
+      <div class="col border border-dark text-center tdtitle">
+        <img src="https://cdn-icons-png.flaticon.com/32/3262/3262966.png" />濕度
+      </div>
+
+      <div class="col border border-dark text-center tdtitle">
+        <img src="https://cdn-icons-png.flaticon.com/32/869/869869.png" />光照度
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col border border-dark text-center" id="ligang-v5-temp"></div>
+      <div class="col border border-dark text-center" id="ligang-v5-humd"></div>
+      <div class="col border border-dark text-center" id="ligang-v5-lux"></div>
+    </div>
+
+    <div class="mt-3 row justify-content-center">
+      <div class="text-center fs-3 w-100">
+        氣象溫度預報
+      </div>
+
+      <div class="echarts">
+        <div class="cwbchart" id="ligang-chart"></div>
+        <div class="cwbfooter" id="ligang-footer"></div>
+      </div>
+    </div>
 
   </div>
+
+  <script src="/js/ligangTemplates.js"></script>
+  <script src="/js/getCwbChart.js"></script>
 </body>
+
 </html>

@@ -14,7 +14,7 @@ const express = require('express'),
 //引用MQTT
 const app = express();
 const server = require('http').Server(app);
-const {connectLigangMQTT, connectMQTT, connectYufengEcMQTT, connectYufengMQTT} = require('./services/mqttService');
+const {connectMQTT, connectYufengEcMQTT, connectYufengMQTT} = require('./services/mqttService');
 
 // 解析 cookie
 app.use(cookieParser(process.env.COOKIE));
@@ -72,7 +72,11 @@ server.listen(port, () => console.log(`伺服器運行中 Port為 ${port}!`));
 // 讀取mqtt控制器
 //connectYufengEcMQTT();
 //connectYufengMQTT();
-// connectMQTT(`cc22_client`, mqttOptions().cc22_temp_topic, mqttOptions().cc22_humd_topic, 'cc22');
-// connectMQTT(`ligangv2_client`, mqttOptions().ligang_v2_temp_topic, mqttOptions().ligang_v2_humd_topic, 'ligangv2');
-// connectMQTT(`ligangv3_client`, mqttOptions().ligang_v3_temp_topic, mqttOptions().ligang_v3_humd_topic, 'ligangv3');
-// connectLigangMQTT(`ligangv5_client`, mqttOptions().ligang_v5_temp_topic, mqttOptions().ligang_v5_humd_topic, mqttOptions().ligang_v5_lux_topic, 'ligangv5');
+// cc22_topics = [mqttOptions().cc22_temp_topic, mqttOptions().cc22_humd_topic];
+// ligangv2_topics = [mqttOptions().ligang_v2_temp_topic, mqttOptions().ligang_v2_humd_topic];
+// ligangv3_topics = [mqttOptions().ligang_v3_temp_topic, mqttOptions().ligang_v3_humd_topic];
+// ligangv5_topics = [mqttOptions().ligang_v5_temp_topic, mqttOptions().ligang_v5_humd_topic, mqttOptions().ligang_v5_lux_topic];
+// connectMQTT(`cc22_client`,  cc22_topics,'cc22');
+// connectMQTT(`ligangv2_client`, ligangv2_topics, 'ligangv2');
+// connectMQTT(`ligangv3_client`, ligangv3_topics, 'ligangv3');
+// connectMQTT(`ligangv5_client`, ligangv5_topics, 'ligangv5');
